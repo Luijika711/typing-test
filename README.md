@@ -1,9 +1,10 @@
-cli typing test written in C++
+CLI typing test written in C++
 
-lasts 30seconds, gets random words from a list of 1000 words
+I have used https://github.com/memoryInject/color-console for coloring text
 
-to run:
-
+to run(unix system):
 ```
 g++ main.cpp -o out && ./out
 ```
+
+![image to ascii](https://github.com/Luijika711/typing-test/blob/main/vid.gif?raw=true)
