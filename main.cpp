@@ -52,9 +52,7 @@ private:
     std::vector<std::string> words;
     std::ifstream fin;
     std::string query;
-    std::string my_str;
-    std::vector<bool> correct; // correct[i] = true if my_str[i] == query[i]
-
+    std::vector<std::pair<char, bool>> my_str; // my_str[i].second == true if my_str[i].first = query[i]
 public:
     void init()
     {
@@ -67,25 +65,25 @@ public:
         }
         std::shuffle(words.begin(), words.end(), std::default_random_engine(seed));
     }
-    void render_screen()
+    void render_screen(const std::vector<std::pair<char, bool>> &arr)
     {
         system("clear");
-        for (int i = 0; i < correct.size(); ++i)
-        {
-            if (correct[i] == true)
+        std::cout << query << "\n";
+        for (const auto &it : arr)
+            if (it.second == true)
             {
                 std::string c;
-                c.push_back(my_str[i]);
+                c.push_back(it.first);
                 console.print(c, {console.green, console.bold});
             }
             else
             {
                 std::string c;
-                c.push_back(my_str[i]);
+                c.push_back(it.first);
                 console.print(c, {console.red, console.bold});
             }
-        }
     }
+
     app()
     {
         this->init();
@@ -100,16 +98,21 @@ public:
         int idx = 0;
         while (ch = in::getch())
         {
+            if (ch == query[idx])
+            {
+                my_str.push_back({ch, true});
+            }
+            else
+            {
+                my_str.push_back({ch, false});
+            }
+
             if (ch == BACKSPACE_KEY && my_str.size())
             {
                 my_str.pop_back();
-                correct.pop_back();
-                render_screen();
                 idx--;
-                continue;
             }
-            correct.push_back(ch == query[idx]);
-            render_screen();
+            render_screen(my_str);
             idx++;
             if (idx == query.size() - 1)
             {
