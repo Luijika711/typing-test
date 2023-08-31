@@ -53,6 +53,8 @@ private:
     std::ifstream fin;
     std::string query;
     std::vector<std::pair<char, bool>> my_str; // my_str[i].second == true if my_str[i].first = query[i]
+    int idx;
+
 public:
     void init()
     {
@@ -65,11 +67,13 @@ public:
         }
         std::shuffle(words.begin(), words.end(), std::default_random_engine(seed));
     }
-    void render_screen(const std::vector<std::pair<char, bool>> &arr)
+    void render_screen(std::vector<std::pair<char, bool>> &arr)
     {
         system("clear");
-        std::cout << query << "\n";
-        for (const auto &it : arr)
+        // std::cout << query << "\n";
+        for (int i = 0; i <= idx; ++i)
+        {
+            auto it = my_str[i];
             if (it.second == true)
             {
                 std::string c;
@@ -82,6 +86,11 @@ public:
                 c.push_back(it.first);
                 console.print(c, {console.red, console.bold});
             }
+        }
+        for (int i = idx + 1; i < query.size(); ++i)
+        {
+            std::cout << query[i];
+        }
     }
 
     app()
@@ -93,11 +102,19 @@ public:
             query += words[i] + " ";
         }
         system("clear");
-        std::cout << query << "\n\n";
+        std::cout << query;
         char ch;
-        int idx = 0;
+        idx = 0;
         while (ch = in::getch())
         {
+            if (ch == BACKSPACE_KEY && my_str.size())
+            {
+                my_str.pop_back();
+                idx--;
+                render_screen(my_str);
+                continue;
+            }
+
             if (ch == query[idx])
             {
                 my_str.push_back({ch, true});
@@ -107,12 +124,8 @@ public:
                 my_str.push_back({ch, false});
             }
 
-            if (ch == BACKSPACE_KEY && my_str.size())
-            {
-                my_str.pop_back();
-                idx--;
-            }
             render_screen(my_str);
+
             idx++;
             if (idx == query.size() - 1)
             {
