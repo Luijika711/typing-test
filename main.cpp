@@ -79,7 +79,6 @@ public:
     void render_screen(std::vector<std::pair<char, bool>> &arr)
     {
         system("clear");
-        // std::cout << query << "\n";
         wordcnt = idx / 5;
         for (int i = 0; i <= idx; ++i)
         {
@@ -101,7 +100,7 @@ public:
         {
             std::cout << query[i];
         }
-        for (int i = 0; i < CONSOLE_HEIGHT - 1; ++i)
+        for (int i = 0; i < CONSOLE_HEIGHT - 2; ++i)
             std::cout << "\n";
         double time_taken = (double)(end - start) / 60.0;
 
