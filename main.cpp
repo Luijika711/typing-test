@@ -89,14 +89,12 @@ public:
                 std::string c;
                 c.push_back(it.first);
                 console.print(c, {console.green, console.bold});
-                goodchar++;
             }
             else
             {
                 std::string c;
                 c.push_back(it.first);
                 console.print(c, {console.red, console.bold});
-                badchar++;
             }
         }
         for (int i = idx + 1; i < query.size(); ++i)
@@ -105,9 +103,18 @@ public:
         }
         for (int i = 0; i < CONSOLE_HEIGHT - 1; ++i)
             std::cout << "\n";
-        double time_taken = (double)(end - start);
-        int wpm = wordcnt / time_taken;
-        std::cout << wpm;
+        double time_taken = (double)(end - start) / 60.0;
+
+        double gross_wpm = (idx * 1.0 / 5.0) / time_taken;
+        acc = (double(idx - badchar)) / idx * 100;
+        wpm = gross_wpm * acc / 100;
+        if (idx == 0 || idx == 1)
+        {
+            std::cout << "wpm : 0 | accuracy : 0%";
+            return;
+        }
+        std::cout
+            << "wpm : " << wpm << " | accuracy : " << (int)acc << "%";
     }
 
     app()
@@ -131,10 +138,12 @@ public:
             if (ch == query[idx])
             {
                 my_str.push_back({ch, true});
+                goodchar++;
             }
             else
             {
                 my_str.push_back({ch, false});
+                badchar++;
             }
             time(&end);
             render_screen(my_str);
@@ -144,6 +153,17 @@ public:
             {
                 break;
             }
+        }
+        char cha;
+        std::cout << "\nwant to do another test?y/n";
+        cha = in::getch();
+        if (cha == 'y')
+        {
+            app f;
+        }
+        else
+        {
+            exit(0);
         }
     }
 };
